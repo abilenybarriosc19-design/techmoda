@@ -1,27 +1,7 @@
 Transform: AWS::Serverless-2016-10-31
-Description: TechModa Serverless Capstone - Fashion E-commerce Product Catalog API (base S0)
-
-# ============================================================================
-# BASE del capstone (S0): DynamoDB + router CRUD + frontend. Cada sesión de IA
-# agrega su recurso pegando el `template-snippet.yaml` correspondiente.
-#
-# IAM: cada Lambda declara sus `Policies:` y **SAM le crea un rol de mínimo
-# privilegio**. No hay rol preexistente ni account ID hardcodeado -> este
-# template funciona en cualquier cuenta con permiso de crear roles.
-#
-# HTTP: una Lambda Function URL (AuthType NONE) + router interno
-# (functions/router), en vez de API Gateway.
-#
-# Deploy: sam build && sam deploy --stack-name techmoda-ai --region us-east-1 \
-#           --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
-#           --resolve-s3 --no-confirm-changeset
-# Detalle: docs/IAM.md
-# ============================================================================
-
+Description: TechModa Serverless Capstone - Fashion E-commerce Product Catalog API
 Globals:
   Function:
-    # Boundary obligatorio: la policy de deploy de los workspaces solo permite
-    # iam:CreateRole si el rol nace con este permissions boundary (techo de permisos).
     PermissionsBoundary: arn:aws:iam::281248178297:policy/techmoda-capstone-boundary
     Timeout: 30
     MemorySize: 1024
@@ -29,54 +9,51 @@ Globals:
     Tracing: Active
     Environment:
       Variables:
-        PRODUCTS_TABLE: !Ref ProductsTable
-
+        PRODUCTS_TABLE:
+          Ref: ProductsTable
 Resources:
-  # DynamoDB Table
   ProductsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Sub ${AWS::StackName}-Products
+      TableName:
+        Fn::Sub: ${AWS::StackName}-Products
       AttributeDefinitions:
-        - AttributeName: productId
-          AttributeType: S
+      - AttributeName: productId
+        AttributeType: S
       BillingMode: PAY_PER_REQUEST
       KeySchema:
-        - AttributeName: productId
-          KeyType: HASH
-
-  # ---------------------------------------------------------------------------
-  # Router CRUD — una sola Lambda, una sola Function URL (reemplaza API Gateway).
-  # CodeUri: functions/  +  Handler: router/index.handler  => el router puede
-  # require('../list-items') etc. porque todo functions/ va en el mismo paquete.
-  # ---------------------------------------------------------------------------
+      - AttributeName: productId
+        KeyType: HASH
+    Metadata:
+      SamResourceId: ProductsTable
   RouterFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub ${AWS::StackName}-Router
+      FunctionName:
+        Fn::Sub: ${AWS::StackName}-Router
       Description: Router CRUD de /products via Lambda Function URL
-      CodeUri: functions/
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-lygcp6suvfg2/c3e82f6fba5513d9bb378c255b99e4fa
       Handler: router/index.handler
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref ProductsTable
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ProductsTable
       FunctionUrlConfig:
         AuthType: NONE
         Cors:
           AllowOrigins:
-            - "*"
+          - '*'
           AllowMethods:
-            - "*"
+          - '*'
           AllowHeaders:
-            - "*"
-
-  # ---------------------------------------------------------------------------
-  # Frontend estático (S3 + CloudFront).
-  # ---------------------------------------------------------------------------
+          - '*'
+    Metadata:
+      SamResourceId: RouterFunction
   FrontendBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub ${AWS::StackName}-frontend
+      BucketName:
+        Fn::Sub: ${AWS::StackName}-frontend
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: index.html
@@ -85,18 +62,22 @@ Resources:
         BlockPublicPolicy: false
         IgnorePublicAcls: false
         RestrictPublicBuckets: false
-
+    Metadata:
+      SamResourceId: FrontendBucket
   FrontendBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
-      Bucket: !Ref FrontendBucket
+      Bucket:
+        Ref: FrontendBucket
       PolicyDocument:
         Statement:
-          - Action: s3:GetObject
-            Effect: Allow
-            Resource: !Sub ${FrontendBucket.Arn}/*
-            Principal: '*'
-
+        - Action: s3:GetObject
+          Effect: Allow
+          Resource:
+            Fn::Sub: ${FrontendBucket.Arn}/*
+          Principal: '*'
+    Metadata:
+      SamResourceId: FrontendBucketPolicy
   FrontendDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
@@ -104,52 +85,453 @@ Resources:
         Enabled: true
         DefaultRootObject: index.html
         Origins:
-          - Id: S3Origin
-            DomainName: !GetAtt FrontendBucket.RegionalDomainName
-            S3OriginConfig:
-              OriginAccessIdentity: ''
+        - Id: S3Origin
+          DomainName:
+            Fn::GetAtt:
+            - FrontendBucket
+            - RegionalDomainName
+          S3OriginConfig:
+            OriginAccessIdentity: ''
         DefaultCacheBehavior:
           TargetOriginId: S3Origin
           ViewerProtocolPolicy: redirect-to-https
           AllowedMethods:
-            - GET
-            - HEAD
-            - OPTIONS
+          - GET
+          - HEAD
+          - OPTIONS
           CachedMethods:
-            - GET
-            - HEAD
+          - GET
+          - HEAD
           ForwardedValues:
             QueryString: false
             Cookies:
               Forward: none
         CustomErrorResponses:
-          - ErrorCode: 404
-            ResponseCode: 200
-            ResponsePagePath: /index.html
-          - ErrorCode: 403
-            ResponseCode: 200
-            ResponsePagePath: /index.html
-
+        - ErrorCode: 404
+          ResponseCode: 200
+          ResponsePagePath: /index.html
+        - ErrorCode: 403
+          ResponseCode: 200
+          ResponsePagePath: /index.html
+    Metadata:
+      SamResourceId: FrontendDistribution
+  EnrichLabelsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: ${AWS::StackName}-EnrichLabels
+      Description: S1 - Auto-etiquetado de imagenes de producto con Rekognition
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-lygcp6suvfg2/6854ed0282213ec8432fa0211e7d4603
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ProductsTable
+      - Statement:
+        - Effect: Allow
+          Action:
+          - rekognition:DetectLabels
+          Resource: '*'
+      - Statement:
+        - Effect: Allow
+          Action:
+          - s3:GetObject
+          Resource:
+            Fn::Sub: arn:${AWS::Partition}:s3:::${AWS::StackName}-*/*
+      Environment:
+        Variables:
+          LABEL_MIN_CONFIDENCE: '80'
+          LABEL_MAX_LABELS: '15'
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+          - '*'
+          AllowMethods:
+          - '*'
+          AllowHeaders:
+          - '*'
+    Metadata:
+      SamResourceId: EnrichLabelsFunction
+  ModerateImageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: ${AWS::StackName}-ModerateImage
+      Description: S2 - Moderacion de imagen + alt-text accesible (Rekognition)
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-lygcp6suvfg2/867bb9640e1a3fc19a891f1c55225de1
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ProductsTable
+      - Statement:
+        - Effect: Allow
+          Action:
+          - rekognition:DetectModerationLabels
+          - rekognition:DetectLabels
+          Resource: '*'
+      - Statement:
+        - Effect: Allow
+          Action:
+          - s3:GetObject
+          Resource:
+            Fn::Sub: arn:${AWS::Partition}:s3:::${AWS::StackName}-*/*
+      Environment:
+        Variables:
+          MODERATION_MIN_CONFIDENCE: '60'
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+          - '*'
+          AllowMethods:
+          - '*'
+          AllowHeaders:
+          - '*'
+    Metadata:
+      SamResourceId: ModerateImageFunction
+  AnalyzeSentimentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: ${AWS::StackName}-AnalyzeSentiment
+      Description: S3 - Analisis de sentimiento con Amazon Comprehend
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-lygcp6suvfg2/df9c3b547342b8db2ff5be64877f8f71
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Policies:
+      - Statement:
+        - Effect: Allow
+          Action:
+          - comprehend:DetectSentiment
+          - comprehend:DetectDominantLanguage
+          Resource: '*'
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+          - '*'
+          AllowMethods:
+          - '*'
+          AllowHeaders:
+          - '*'
+    Metadata:
+      SamResourceId: AnalyzeSentimentFunction
+  TranslateCatalogFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: ${AWS::StackName}-TranslateCatalog
+      Description: S4 - Catalogo multilingue ES/EN (Amazon Translate)
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-lygcp6suvfg2/1dcbc0f244cd755d14fdf1e81e96f035
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ProductsTable
+      - Statement:
+        - Effect: Allow
+          Action:
+          - translate:TranslateText
+          - comprehend:DetectDominantLanguage
+          Resource: '*'
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+          - '*'
+          AllowMethods:
+          - '*'
+          AllowHeaders:
+          - '*'
+    Metadata:
+      SamResourceId: TranslateCatalogFunction
+  AudioBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        Fn::Sub: ${AWS::StackName}-audio
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+        - Id: ExpireAudio
+          Status: Enabled
+          ExpirationInDays: 7
+    Metadata:
+      SamResourceId: AudioBucket
+  SynthesizeVoiceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: ${AWS::StackName}-SynthesizeVoice
+      Description: S5 - Descripcion por voz / accesibilidad (Amazon Polly)
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-lygcp6suvfg2/d5650fa4b1f6cc5298b921186d066ea0
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ProductsTable
+      - Statement:
+        - Effect: Allow
+          Action: polly:SynthesizeSpeech
+          Resource: '*'
+      - S3CrudPolicy:
+          BucketName:
+            Ref: AudioBucket
+      Environment:
+        Variables:
+          AUDIO_BUCKET:
+            Ref: AudioBucket
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+          - '*'
+          AllowMethods:
+          - '*'
+          AllowHeaders:
+          - '*'
+    Metadata:
+      SamResourceId: SynthesizeVoiceFunction
+  GenerateDescriptionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: ${AWS::StackName}-GenerateDescription
+      Description: S6 - Generar descripciones de producto (Bedrock / GenAI)
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-lygcp6suvfg2/156657b04ac6dad0df34b6d223ca80bb
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ProductsTable
+      - Statement:
+        - Effect: Allow
+          Action: bedrock:InvokeModel
+          Resource:
+          - Fn::Sub: arn:${AWS::Partition}:bedrock:*::foundation-model/*
+          - Fn::Sub: arn:${AWS::Partition}:bedrock:*:${AWS::AccountId}:inference-profile/*
+      Timeout: 60
+      Environment:
+        Variables:
+          BEDROCK_MODEL_ID: us.anthropic.claude-haiku-4-5-20251001-v1:0
+          BEDROCK_MAX_TOKENS: '300'
+          BEDROCK_TEMPERATURE: '0.7'
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+          - '*'
+          AllowMethods:
+          - '*'
+          AllowHeaders:
+          - '*'
+    Metadata:
+      SamResourceId: GenerateDescriptionFunction
+  IndexEmbeddingsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: ${AWS::StackName}-IndexEmbeddings
+      Description: S7 - Construye el indice de embeddings del catalogo (Bedrock Titan)
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-lygcp6suvfg2/77e98f9bff09de9f3eabfb09088f2f3b
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ProductsTable
+      - Statement:
+        - Effect: Allow
+          Action: bedrock:InvokeModel
+          Resource:
+          - Fn::Sub: arn:${AWS::Partition}:bedrock:*::foundation-model/*
+          - Fn::Sub: arn:${AWS::Partition}:bedrock:*:${AWS::AccountId}:inference-profile/*
+      Timeout: 120
+      Environment:
+        Variables:
+          EMBED_MODEL_ID: amazon.titan-embed-text-v2:0
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+          - '*'
+          AllowMethods:
+          - '*'
+          AllowHeaders:
+          - '*'
+    Metadata:
+      SamResourceId: IndexEmbeddingsFunction
+  SemanticSearchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: ${AWS::StackName}-SemanticSearch
+      Description: S7 - Busqueda semantica del catalogo (Bedrock Titan)
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-lygcp6suvfg2/2aa1c9bd18682c9209b8406e22fdad39
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Policies:
+      - DynamoDBReadPolicy:
+          TableName:
+            Ref: ProductsTable
+      - Statement:
+        - Effect: Allow
+          Action: bedrock:InvokeModel
+          Resource:
+          - Fn::Sub: arn:${AWS::Partition}:bedrock:*::foundation-model/*
+          - Fn::Sub: arn:${AWS::Partition}:bedrock:*:${AWS::AccountId}:inference-profile/*
+      Timeout: 60
+      Environment:
+        Variables:
+          EMBED_MODEL_ID: amazon.titan-embed-text-v2:0
+          SEARCH_TOP_K: '5'
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+          - '*'
+          AllowMethods:
+          - '*'
+          AllowHeaders:
+          - '*'
+    Metadata:
+      SamResourceId: SemanticSearchFunction
+  ShoppingAssistantFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: ${AWS::StackName}-ShoppingAssistant
+      Description: S8 - Asistente de compras conversacional (Bedrock RAG)
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-lygcp6suvfg2/7eb929a20241dcfc1db0e3f0f0ac1db8
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Policies:
+      - DynamoDBReadPolicy:
+          TableName:
+            Ref: ProductsTable
+      - Statement:
+        - Effect: Allow
+          Action: bedrock:InvokeModel
+          Resource:
+          - Fn::Sub: arn:${AWS::Partition}:bedrock:*::foundation-model/*
+          - Fn::Sub: arn:${AWS::Partition}:bedrock:*:${AWS::AccountId}:inference-profile/*
+      Timeout: 60
+      Environment:
+        Variables:
+          EMBED_MODEL_ID: amazon.titan-embed-text-v2:0
+          BEDROCK_MODEL_ID: us.anthropic.claude-haiku-4-5-20251001-v1:0
+          ASSISTANT_TOP_K: '3'
+          BEDROCK_MAX_TOKENS: '400'
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+          - '*'
+          AllowMethods:
+          - '*'
+          AllowHeaders:
+          - '*'
+    Metadata:
+      SamResourceId: ShoppingAssistantFunction
 Outputs:
+  TranslateCatalogUrl:
+    Value:
+      Fn::GetAtt:
+      - TranslateCatalogFunctionUrl
+      - FunctionUrl
+  SynthesizeVoiceUrl:
+    Description: S5 Function URL
+    Value:
+      Fn::GetAtt:
+      - SynthesizeVoiceFunctionUrl
+      - FunctionUrl
   ApiUrl:
     Description: Base API URL (Lambda Function URL del router CRUD). Termina en '/'.
-    Value: !GetAtt RouterFunctionUrl.FunctionUrl
+    Value:
+      Fn::GetAtt:
+      - RouterFunctionUrl
+      - FunctionUrl
   ProductsTableName:
     Description: Name of the DynamoDB Products table
-    Value: !Ref ProductsTable
+    Value:
+      Ref: ProductsTable
   Region:
     Description: AWS Region
-    Value: !Ref AWS::Region
+    Value:
+      Ref: AWS::Region
   FrontendUrl:
     Description: CloudFront URL for the frontend
-    Value: !Sub 'https://${FrontendDistribution.DomainName}'
+    Value:
+      Fn::Sub: https://${FrontendDistribution.DomainName}
   FrontendBucketName:
     Description: S3 Bucket name for frontend
-    Value: !Ref FrontendBucket
-
+    Value:
+      Ref: FrontendBucket
+  EnrichLabelsUrl:
+    Description: S1 Function URL
+    Value:
+      Fn::GetAtt:
+      - EnrichLabelsFunctionUrl
+      - FunctionUrl
+  ModerateImageUrl:
+    Description: S2 Function URL
+    Value:
+      Fn::GetAtt:
+      - ModerateImageFunctionUrl
+      - FunctionUrl
+  AnalyzeSentimentUrl:
+    Description: S3 Function URL
+    Value:
+      Fn::GetAtt:
+      - AnalyzeSentimentFunctionUrl
+      - FunctionUrl
+  GenerateDescriptionUrl:
+    Description: S6 Function URL
+    Value:
+      Fn::GetAtt:
+      - GenerateDescriptionFunctionUrl
+      - FunctionUrl
+  IndexEmbeddingsUrl:
+    Description: S7 Function URL
+    Value:
+      Fn::GetAtt:
+      - IndexEmbeddingsFunctionUrl
+      - FunctionUrl
+  SemanticSearchUrl:
+    Description: S7 Function URL
+    Value:
+      Fn::GetAtt:
+      - SemanticSearchFunctionUrl
+      - FunctionUrl
+  ShoppingAssistantUrl:
+    Description: S8 Function URL
+    Value:
+      Fn::GetAtt:
+      - ShoppingAssistantFunctionUrl
+      - FunctionUrl
 Metadata:
   AWS::Composer::Groups:
     Group:
       Label: API Compute
       Members:
-        - RouterFunction
+      - SynthesizeVoiceFunction
+      - RouterFunction
+      - EnrichLabelsFunction
+      - ModerateImageFunction
+      - AnalyzeSentimentFunction
+      - TranslateCatalogFunction
+      - GenerateDescriptionFunction
+      - IndexEmbeddingsFunction
+      - SemanticSearchFunction
+      - ShoppingAssistantFunction
