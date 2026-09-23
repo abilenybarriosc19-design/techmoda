@@ -13,9 +13,9 @@ echo "=========================================="
 echo ""
 
 # Get stack name from samconfig.toml or use default
-STACK_NAME="${STACK_NAME:-techmoda-ai}"
+STACK_NAME="${STACK_NAME:-techmoda-ai-aby}"
 if [ -f "samconfig.toml" ]; then
-    STACK_NAME=$(grep 'stack_name' samconfig.toml | cut -d'"' -f2 || echo "techmoda-ai")
+    STACK_NAME=$(grep 'stack_name' samconfig.toml | cut -d'"' -f2 || echo "techmoda-ai-aby")
 fi
 
 echo "📦 Paso 1/3: Construyendo y desplegando Backend..."

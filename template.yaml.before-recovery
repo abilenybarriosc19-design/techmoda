@@ -1,0 +1,155 @@
+Transform: AWS::Serverless-2016-10-31
+Description: TechModa Serverless Capstone - Fashion E-commerce Product Catalog API (base S0)
+
+# ============================================================================
+# BASE del capstone (S0): DynamoDB + router CRUD + frontend. Cada sesión de IA
+# agrega su recurso pegando el `template-snippet.yaml` correspondiente.
+#
+# IAM: cada Lambda declara sus `Policies:` y **SAM le crea un rol de mínimo
+# privilegio**. No hay rol preexistente ni account ID hardcodeado -> este
+# template funciona en cualquier cuenta con permiso de crear roles.
+#
+# HTTP: una Lambda Function URL (AuthType NONE) + router interno
+# (functions/router), en vez de API Gateway.
+#
+# Deploy: sam build && sam deploy --stack-name techmoda-ai --region us-east-1 \
+#           --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
+#           --resolve-s3 --no-confirm-changeset
+# Detalle: docs/IAM.md
+# ============================================================================
+
+Globals:
+  Function:
+    # Boundary obligatorio: la policy de deploy de los workspaces solo permite
+    # iam:CreateRole si el rol nace con este permissions boundary (techo de permisos).
+    PermissionsBoundary: arn:aws:iam::281248178297:policy/techmoda-capstone-boundary
+    Timeout: 30
+    MemorySize: 1024
+    Runtime: nodejs22.x
+    Tracing: Active
+    Environment:
+      Variables:
+        PRODUCTS_TABLE: !Ref ProductsTable
+
+Resources:
+  # DynamoDB Table
+  ProductsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${AWS::StackName}-Products
+      AttributeDefinitions:
+        - AttributeName: productId
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: productId
+          KeyType: HASH
+
+  # ---------------------------------------------------------------------------
+  # Router CRUD — una sola Lambda, una sola Function URL (reemplaza API Gateway).
+  # CodeUri: functions/  +  Handler: router/index.handler  => el router puede
+  # require('../list-items') etc. porque todo functions/ va en el mismo paquete.
+  # ---------------------------------------------------------------------------
+  RouterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-Router
+      Description: Router CRUD de /products via Lambda Function URL
+      CodeUri: functions/
+      Handler: router/index.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ProductsTable
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+            - "*"
+          AllowMethods:
+            - "*"
+          AllowHeaders:
+            - "*"
+
+  # ---------------------------------------------------------------------------
+  # Frontend estático (S3 + CloudFront).
+  # ---------------------------------------------------------------------------
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-frontend
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+
+  FrontendBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FrontendBucket
+      PolicyDocument:
+        Statement:
+          - Action: s3:GetObject
+            Effect: Allow
+            Resource: !Sub ${FrontendBucket.Arn}/*
+            Principal: '*'
+
+  FrontendDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        Origins:
+          - Id: S3Origin
+            DomainName: !GetAtt FrontendBucket.RegionalDomainName
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          CachedMethods:
+            - GET
+            - HEAD
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+
+Outputs:
+  ApiUrl:
+    Description: Base API URL (Lambda Function URL del router CRUD). Termina en '/'.
+    Value: !GetAtt RouterFunctionUrl.FunctionUrl
+  ProductsTableName:
+    Description: Name of the DynamoDB Products table
+    Value: !Ref ProductsTable
+  Region:
+    Description: AWS Region
+    Value: !Ref AWS::Region
+  FrontendUrl:
+    Description: CloudFront URL for the frontend
+    Value: !Sub 'https://${FrontendDistribution.DomainName}'
+  FrontendBucketName:
+    Description: S3 Bucket name for frontend
+    Value: !Ref FrontendBucket
+
+Metadata:
+  AWS::Composer::Groups:
+    Group:
+      Label: API Compute
+      Members:
+        - RouterFunction

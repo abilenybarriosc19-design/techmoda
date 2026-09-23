@@ -23,7 +23,8 @@ import math
 import os
 
 import boto3
-
+GUARDRAIL_ID = os.environ.get("BEDROCK_GUARDRAIL_ID")
+GUARDRAIL_VER = os.environ.get("BEDROCK_GUARDRAIL_VERSION", "DRAFT")
 PRODUCTS_TABLE = os.environ["PRODUCTS_TABLE"]
 EMBED_MODEL_ID = os.environ.get("EMBED_MODEL_ID", "amazon.titan-embed-text-v2:0")
 CHAT_MODEL_ID = os.environ.get("BEDROCK_MODEL_ID", "anthropic.claude-haiku-4-5-20251001-v1:0")
@@ -48,14 +49,21 @@ def _response(status, body):
         "body": json.dumps(body, ensure_ascii=False),
     }
 
-
 def _embed(text):
-    resp = bedrock.invoke_model(
-        modelId=EMBED_MODEL_ID,
-        contentType="application/json",
-        accept="application/json",
-        body=json.dumps({"inputText": text}),
-    )
+    kwargs = {
+        "modelId": CHAT_MODEL_ID,
+        "system": [{"text": SYSTEM_PROMPT}],
+        "messages": messages,
+        "inferenceConfig": {"maxTokens": MAX_TOKENS, "temperature": 0.5},
+    }
+
+    if GUARDRAIL_ID:
+        kwargs["guardrailConfig"] = {
+            "guardrailIdentifier": GUARDRAIL_ID,
+            "guardrailVersion": GUARDRAIL_VER,
+        }
+
+    resp = bedrock.converse(**kwargs)
     return json.loads(resp["body"].read())["embedding"]
 
 

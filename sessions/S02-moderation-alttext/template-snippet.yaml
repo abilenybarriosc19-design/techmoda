@@ -6,7 +6,8 @@
 # Ver docs/SANDBOX-COMPAT.md.
 # ----------------------------------------------------------------------------
 
-  ModerateImageFunction:
+
+ModerateImageFunction:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub ${AWS::StackName}-ModerateImage
@@ -23,7 +24,6 @@
                 - rekognition:DetectModerationLabels
                 - rekognition:DetectLabels
               Resource: "*"
-        # Si imageUrl es s3://, Rekognition lee el objeto con ESTE rol.
         - Statement:
             - Effect: Allow
               Action: s3:GetObject
@@ -36,9 +36,7 @@
         Cors:
           AllowOrigins: [ "*" ]
           AllowMethods: [ "*" ]
-          AllowHeaders: [ "*" ]
-
-# ----------------------------------------------------------------------------
+          AllowHeaders: [ "*" ]-----------------------------------------------
 # FUNCTION URL — Outputs:
 #   ModerateImageUrl:
 #     Value: !GetAtt ModerateImageFunctionUrl.FunctionUrl

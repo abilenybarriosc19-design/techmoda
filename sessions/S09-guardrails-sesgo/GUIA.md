@@ -102,7 +102,7 @@ Y en el `template.yaml`, agregá a esas funciones:
 ### 3. Probar que filtra
 ```bash
 # Function URL del asistente (output ShoppingAssistantUrl de S8):
-URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 \
+URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai-aby --region us-east-1 \
   --query "Stacks[0].Outputs[?OutputKey=='ShoppingAssistantUrl'].OutputValue" --output text)
 # Intento fuera de dominio / con PII → el guardrail debe intervenir:
 curl -s -X POST "${URL%/}/assistant" -H "Content-Type: application/json" \

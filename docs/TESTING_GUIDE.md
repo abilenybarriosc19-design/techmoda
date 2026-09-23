@@ -40,7 +40,7 @@ Copia la URL del campo `Value`.
 
 ```bash
 aws cloudformation describe-stacks \
-  --stack-name techmoda-ai \
+  --stack-name techmoda-ai-aby \
   --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" \
   --output text
 ```
@@ -48,7 +48,7 @@ aws cloudformation describe-stacks \
 ### Método 3: Consola de AWS
 
 1. Ve a la consola de AWS CloudFormation
-2. Selecciona tu stack (ej., `techmoda-ai`)
+2. Selecciona tu stack (ej., `techmoda-ai-aby`)
 3. Haz clic en la pestaña "Outputs"
 4. Copia el valor de `ApiUrl`
 
@@ -540,12 +540,12 @@ Después de ejecutar las pruebas, revisa los logs de ejecución de Lambda para d
 
 **Listar streams de logs recientes**:
 ```bash
-aws logs tail /aws/lambda/techmoda-ai-CreateItem --follow
+aws logs tail /aws/lambda/techmoda-ai-aby-CreateItem --follow
 ```
 
 **Obtener últimos 50 eventos de log**:
 ```bash
-aws logs tail /aws/lambda/techmoda-ai-CreateItem --since 5m
+aws logs tail /aws/lambda/techmoda-ai-aby-CreateItem --since 5m
 ```
 
 ### Ver Logs (Consola de AWS)

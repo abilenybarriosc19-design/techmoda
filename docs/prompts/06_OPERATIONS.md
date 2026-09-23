@@ -2,7 +2,7 @@
 
 Estos prompts le ayudan a monitorear traces de X-Ray, estimar costos de AWS, limpiar recursos y solucionar problemas de fallos de eliminación.
 
-> 🏖️ **Sandbox AWS re/Start:** el stack se llama **`techmoda-ai`** y el frente HTTP es **Lambda
+> 🏖️ **Sandbox AWS re/Start:** el stack se llama **`techmoda-ai-aby`** y el frente HTTP es **Lambda
 > Function URLs** (no API Gateway). El cleanup elimina las Function URLs junto con las Lambdas. Ver
 > [../SANDBOX-COMPAT.md](../SANDBOX-COMPAT.md).
 
@@ -11,7 +11,7 @@ Estos prompts le ayudan a monitorear traces de X-Ray, estimar costos de AWS, lim
 ```
 I want to analyze X-Ray traces for my API to understand request flow.
 
-Stack: techmoda-ai
+Stack: techmoda-ai-aby
 
 Please provide:
 1. Where to find X-Ray traces in AWS Console
@@ -50,7 +50,7 @@ Please provide:
 ```
 I have finished testing my TechModa capstone and need to delete all resources to avoid charges.
 
-Stack name: techmoda-ai
+Stack name: techmoda-ai-aby
 
 Please provide:
 1. Command to delete SAM stack (sam delete)
@@ -88,7 +88,7 @@ Please help:
 ```
 I want to use X-Ray to analyze my API's performance and identify bottlenecks.
 
-Stack: techmoda-ai
+Stack: techmoda-ai-aby
 Endpoint tested: [POST/GET/PUT/DELETE /products]
 
 Please show me:
@@ -197,7 +197,7 @@ Please suggest:
 ```
 I need to delete ALL resources created for my TechModa capstone.
 
-Stack name: techmoda-ai
+Stack name: techmoda-ai-aby
 Region: us-east-1
 
 Please provide step-by-step:
@@ -254,7 +254,7 @@ Please help:
 ```
 My stack deletion failed and is now in DELETE_FAILED status.
 
-Stack name: techmoda-ai
+Stack name: techmoda-ai-aby
 
 CloudFormation Events show:
 [Paste error from Events tab]

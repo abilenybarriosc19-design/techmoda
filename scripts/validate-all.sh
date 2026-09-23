@@ -9,7 +9,7 @@
 # Pensado para que un estudiante sepa exactamente qué está roto y dónde, sin
 # tener que leer stack traces. Sin `set -e`: corremos TODO y damos un resumen.
 
-STACK="${STACK_NAME:-techmoda-ai}"
+STACK="${STACK_NAME:-techmoda-ai-aby}"
 REGION="${AWS_REGION:-us-east-1}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT" || exit 1

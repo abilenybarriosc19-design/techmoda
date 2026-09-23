@@ -132,7 +132,7 @@ Después del deploy, para ver el rol que SAM generó para una función:
 
 ```bash
 aws lambda get-function-configuration \
-  --function-name techmoda-ai-EnrichLabels --query Role --output text
+  --function-name techmoda-ai-aby-EnrichLabels --query Role --output text
 # luego: aws iam list-role-policies --role-name <ese-rol>
 ```
 

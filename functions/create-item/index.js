@@ -28,7 +28,6 @@ exports.handler = async (event) => {
                 statusCode: 400,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
                 },
                 body: JSON.stringify({
                     error: 'Campos requeridos faltantes',
@@ -65,7 +64,6 @@ exports.handler = async (event) => {
             statusCode: 201,
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify(product)
         };
@@ -76,7 +74,6 @@ exports.handler = async (event) => {
             statusCode: 500,
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify({
                 error: 'Error al crear producto',

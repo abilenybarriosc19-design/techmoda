@@ -261,7 +261,7 @@ Please help:
 ```
 I need to view the most recent logs for my Lambda function.
 
-Function name: techmoda-ai-[FunctionName]
+Function name: techmoda-ai-aby-[FunctionName]
 
 Please provide:
 1. AWS CLI command to tail logs in real-time
@@ -393,7 +393,7 @@ Please show me:
 ```
 My latest deployment broke the application and I need to rollback quickly.
 
-Stack name: techmoda-ai
+Stack name: techmoda-ai-aby
 
 Please help:
 1. How to rollback to previous version

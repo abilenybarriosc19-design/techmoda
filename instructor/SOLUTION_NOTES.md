@@ -3,7 +3,7 @@
 ## Propósito
 
 > 🔌 El frente HTTP es una **Lambda Function URL** + **router** (no API Gateway), cada función lleva
-> sus `Policies:` acotadas y **SAM le crea el rol**, el stack es **`techmoda-ai`** y la región
+> sus `Policies:` acotadas y **SAM le crea el rol**, el stack es **`techmoda-ai-aby`** y la región
 > **us-east-1**. Ver [../docs/SANDBOX-COMPAT.md](../docs/SANDBOX-COMPAT.md) y
 > [../docs/IAM.md](../docs/IAM.md).
 
@@ -60,7 +60,7 @@ Siempre usar variable de entorno para el nombre de la tabla:
 const tableName = process.env.PRODUCTS_TABLE;
 ```
 
-**Nunca hardcodear**: `const tableName = "techmoda-ai-Products";` (se rompe cuando se despliega en diferentes entornos)
+**Nunca hardcodear**: `const tableName = "techmoda-ai-aby-Products";` (se rompe cuando se despliega en diferentes entornos)
 
 ## Patrones Específicos por Función
 
@@ -691,7 +691,7 @@ Los estudiantes pueden notar que la primera solicitud después del despliegue es
 
 **Error 500 → Revisar Código Lambda**:
 ```bash
-aws logs tail /aws/lambda/techmoda-ai-[FunctionName] --follow
+aws logs tail /aws/lambda/techmoda-ai-aby-[FunctionName] --follow
 ```
 
 **403 Forbidden → Revisar los permisos de la función**:
@@ -759,19 +759,19 @@ Al revisar el código de los estudiantes, buscar:
 
 ```bash
 # Ver recursos del stack
-aws cloudformation list-stack-resources --stack-name techmoda-ai --region us-east-1
+aws cloudformation list-stack-resources --stack-name techmoda-ai-aby --region us-east-1
 
 # Obtener la Function URL (output ApiUrl)
-aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 --query "Stacks[0].Outputs"
+aws cloudformation describe-stacks --stack-name techmoda-ai-aby --region us-east-1 --query "Stacks[0].Outputs"
 
 # Escanear tabla DynamoDB
-aws dynamodb scan --table-name techmoda-ai-Products
+aws dynamodb scan --table-name techmoda-ai-aby-Products
 
 # Ver logs de Lambda
-aws logs tail /aws/lambda/techmoda-ai-ListItems --follow
+aws logs tail /aws/lambda/techmoda-ai-aby-ListItems --follow
 
 # Eliminar stack
-sam delete --stack-name techmoda-ai --region us-east-1
+sam delete --stack-name techmoda-ai-aby --region us-east-1
 ```
 
 ---

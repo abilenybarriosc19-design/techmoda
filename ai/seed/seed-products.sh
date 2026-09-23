@@ -8,7 +8,7 @@
 # Si no pasás API_URL, intenta leerlo de la salida del stack CloudFormation.
 set -euo pipefail
 
-STACK_NAME="${STACK_NAME:-techmoda-ai}"
+STACK_NAME="${STACK_NAME:-techmoda-ai-aby}"
 REGION="${AWS_REGION:-us-east-1}"
 
 if [[ -z "${API_URL:-}" ]]; then

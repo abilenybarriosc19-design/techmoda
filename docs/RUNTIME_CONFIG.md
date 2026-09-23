@@ -284,7 +284,7 @@ cat frontend/dist/env-config.js
 ```bash
 # Invalidar cache
 DIST_ID=$(aws cloudformation describe-stacks \
-  --stack-name techmoda-ai --region us-east-1 \
+  --stack-name techmoda-ai-aby --region us-east-1 \
   --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontDistributionId`].OutputValue' \
   --output text)
 

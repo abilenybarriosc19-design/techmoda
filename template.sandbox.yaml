@@ -192,6 +192,67 @@ Resources:
     Properties:
       LogGroupName: !Sub /techmoda/${AWS::StackName}/bedrock-invocations
       RetentionInDays: 30
+  # ---- S07 bedrock RAG busqueda ----
+   IndexEmbeddingsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-IndexEmbeddings
+      Description: S7 - Construye el indice de embeddings del catalogo (Bedrock Titan)
+      CodeUri: sessions/S07-bedrock-rag-busqueda/functions/index-embeddings
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ProductsTable
+        # Bedrock SI admite ARN de recurso -> acotamos al modelo, no a bedrock:*.
+        # inference-profile cubre los IDs con prefijo "us." (perfiles cross-region).
+        - Statement:
+            - Effect: Allow
+              Action: bedrock:InvokeModel
+              Resource:
+                - !Sub arn:${AWS::Partition}:bedrock:*::foundation-model/*
+                - !Sub arn:${AWS::Partition}:bedrock:*:${AWS::AccountId}:inference-profile/*
+      Timeout: 120   # recorre todo el catalogo
+      Environment:
+        Variables:
+          EMBED_MODEL_ID: amazon.titan-embed-text-v2:0
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins: [ "*" ]
+          AllowMethods: [ "*" ]
+          AllowHeaders: [ "*" ]
+
+  SemanticSearchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-SemanticSearch
+      Description: S7 - Busqueda semantica del catalogo (Bedrock Titan)
+      CodeUri: sessions/S07-bedrock-rag-busqueda/functions/semantic-search
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref ProductsTable
+        # Bedrock SI admite ARN de recurso -> acotamos al modelo, no a bedrock:*.
+        # inference-profile cubre los IDs con prefijo "us." (perfiles cross-region).
+        - Statement:
+            - Effect: Allow
+              Action: bedrock:InvokeModel
+              Resource:
+                - !Sub arn:${AWS::Partition}:bedrock:*::foundation-model/*
+                - !Sub arn:${AWS::Partition}:bedrock:*:${AWS::AccountId}:inference-profile/*
+      Timeout: 60
+      Environment:
+        Variables:
+          EMBED_MODEL_ID: amazon.titan-embed-text-v2:0
+          SEARCH_TOP_K: "5"
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins: [ "*" ]
+          AllowMethods: [ "*" ]
+          AllowHeaders: [ "*" ]
 
 Outputs:
   ApiUrl:

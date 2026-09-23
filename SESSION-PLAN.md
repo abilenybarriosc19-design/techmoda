@@ -5,7 +5,7 @@ persistente** (un sandbox que se recicla, o un cleanup entre sesiones).
 
 ## El problema de continuidad (y su solución)
 
-Si trabajás en un entorno efímero, entre un día y otro el stack `techmoda-ai`, los
+Si trabajás en un entorno efímero, entre un día y otro el stack `techmoda-ai-aby`, los
 productos sembrados y todos los enriquecimientos (labels, sentimiento, audio)
 **desaparecen**. Por eso una sesión NO puede asumir el estado de la anterior.
 
@@ -70,7 +70,7 @@ bash scripts/validate-all.sh        # PASS/FAIL de todo: estático + CRUD + feat
 O a mano, sólo el catálogo:
 
 ```bash
-API=$(aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 \
+API=$(aws cloudformation describe-stacks --stack-name techmoda-ai-aby --region us-east-1 \
        --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text)
 curl -s "${API%/}/products" | python3 -m json.tool   # debe listar los 4 productos
 ```

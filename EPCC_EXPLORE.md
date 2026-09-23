@@ -230,7 +230,7 @@ apuntando a `docs/IAM.md`) mantiene los 40 enlaces vivos y elimina la contradicc
 `feat/migrate-region-us-east-1` con trabajo sin commitear de **dos** temas distintos (región ya
 commiteada; IAM + contrato sin commitear) — conviene rama nueva desde `master` o commits separados.
 `gh` **no está instalado**; el PR va por la API REST de GitHub con `$GITHUB_TOKEN` (permiso `push`
-verificado en `gabanox/techmoda-ai-capstone`).
+verificado en `gabanox/techmoda-ai-aby-capstone`).
 
 **Gap que ningún arreglo de docs cierra**: sin credenciales AWS, nadie ha probado que los roles que
 SAM genera alcancen en runtime. Las 9 features de IA y el CRUD E2E siguen sin verificar contra la

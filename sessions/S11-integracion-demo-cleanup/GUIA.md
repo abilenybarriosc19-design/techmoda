@@ -55,7 +55,7 @@ Una solución de IA no es solo "que funcione el modelo". El examen evalúa que e
 ### 1. Demo end-to-end
 ```bash
 # API_URL = Function URL del router (output ApiUrl). demo.sh resuelve por su cuenta las
-# Function URLs de cada feature de IA desde los outputs del stack techmoda-ai (us-east-1).
+# Function URLs de cada feature de IA desde los outputs del stack techmoda-ai-aby (us-east-1).
 API_URL=https://xxxx.lambda-url.us-east-1.on.aws/ \
   bash sessions/S11-integracion-demo-cleanup/demo.sh
 ```
@@ -89,7 +89,7 @@ bash scripts/delete-all.sh
 `scripts/delete-all.sh` vacía los buckets S3 antes de eliminar el stack (CloudFormation no borra buckets
 con objetos). Verificá al final que el stack ya no aparece:
 ```bash
-aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 2>&1 | grep -q "does not exist" \
+aws cloudformation describe-stacks --stack-name techmoda-ai-aby --region us-east-1 2>&1 | grep -q "does not exist" \
   && echo "✓ Stack eliminado" || echo "⚠ Revisá el estado del stack"
 ```
 
@@ -101,7 +101,7 @@ aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 2
 - [ ] Cada dominio AIF-C01 (D1–D5) tiene al menos una feature que lo evidencia.
 - [ ] El logging de Bedrock y el guardrail fueron eliminados (si se crearon).
 - [ ] `scripts/delete-all.sh` dejó la cuenta sin recursos del capstone.
-- [ ] No quedan buckets (`frontend`, `audio`) ni Lambdas `techmoda-ai-*`.
+- [ ] No quedan buckets (`frontend`, `audio`) ni Lambdas `techmoda-ai-aby-*`.
 
 ---
 
@@ -118,6 +118,6 @@ aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 2
 
 **Costo:** $0 tras el cleanup. Mientras el stack vive, el costo en reposo es mínimo (Lambda/DynamoDB
 on-demand no cobran sin tráfico); el costo real es **por invocación** de los servicios de IA.
-*Verificar el costo final en Cost Explorer filtrando por el tag `Project=techmoda-ai-capstone`.*
+*Verificar el costo final en Cost Explorer filtrando por el tag `Project=techmoda-ai-aby-capstone`.*
 
 **Cleanup:** `bash scripts/delete-all.sh` — **hacelo siempre al terminar.**

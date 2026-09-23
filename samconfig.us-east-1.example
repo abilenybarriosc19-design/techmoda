@@ -9,7 +9,7 @@
 version = 0.1
 
 [default.deploy.parameters]
-stack_name = "techmoda-ai"
+stack_name = "techmoda-ai-aby"
 region = "us-east-1"
 # Ninguna de las dos capabilities es opcional:
 #   CAPABILITY_IAM         -> el stack CREA roles (uno de mínimo privilegio por Lambda).

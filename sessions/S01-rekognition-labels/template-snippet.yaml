@@ -49,7 +49,7 @@
 # El productId se toma del path (rawPath: /products/<id>/labels) o del body
 # {"productId":"..."} — el handler soporta ambos. Ejemplo de invocación:
 #
-#   URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai \
+#   URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai-aby-aby \
 #          --query "Stacks[0].Outputs[?OutputKey=='EnrichLabelsUrl'].OutputValue" --output text)
 #   curl -X POST "${URL%/}/products/<PRODUCT_ID>/labels"
 #

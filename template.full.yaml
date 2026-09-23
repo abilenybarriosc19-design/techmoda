@@ -35,7 +35,7 @@ Globals:
       Variables:
         PRODUCTS_TABLE: !Ref ProductsTable
     Tags:                         # S10: cost allocation tags
-      Project: techmoda-ai-capstone
+      Project: techmoda-ai-aby-aby-capstone
       Module: ai-practitioner
       Environment: dev
 
@@ -306,7 +306,7 @@ Resources:
           AllowMethods: [ "*" ]
           AllowHeaders: [ "*" ]
 
-  # ---- S8 · Bedrock RAG chatbot ----
+# ---- S8 · Bedrock RAG chatbot ----
   ShoppingAssistantFunction:
     Type: AWS::Serverless::Function
     Properties:

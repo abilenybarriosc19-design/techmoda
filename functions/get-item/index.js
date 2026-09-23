@@ -26,7 +26,6 @@ exports.handler = async (event) => {
                 statusCode: 400,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
                 },
                 body: JSON.stringify({
                     error: 'ID del producto requerido'
@@ -49,7 +48,6 @@ exports.handler = async (event) => {
                 statusCode: 404,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
                 },
                 body: JSON.stringify({
                     error: 'Producto no encontrado'
@@ -63,7 +61,6 @@ exports.handler = async (event) => {
             statusCode: 200,
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify(result.Item)
         };
@@ -74,7 +71,6 @@ exports.handler = async (event) => {
             statusCode: 500,
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify({
                 error: 'Error al obtener producto',

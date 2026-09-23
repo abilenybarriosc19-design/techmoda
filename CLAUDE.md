@@ -76,7 +76,7 @@ base URL el frontend (`frontend/src/lib/api.ts`) no cambia.
 
 ## Despliegue
 
-Región **us-east-1**, stack **`techmoda-ai`**. Requiere una cuenta donde puedas **crear roles IAM**
+Región **us-east-1**, stack **`techmoda-ai-aby`**. Requiere una cuenta donde puedas **crear roles IAM**
 (`iam:CreateRole`): el stack crea uno de mínimo privilegio por Lambda. Verificá primero que estás
 autenticado (`aws sts get-caller-identity`) y corré `bash scripts/validate-all.sh --static`.
 
@@ -97,7 +97,7 @@ que CloudFront propaga (mientras tanto la API ya responde por `curl`).
 pasa las flags explícitas. Las capabilities **no son opcionales**:
 
 ```bash
-sam deploy --stack-name techmoda-ai --region us-east-1 \
+sam deploy --stack-name techmoda-ai-aby --region us-east-1 \
   --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
   --resolve-s3 --no-confirm-changeset
 ```
@@ -115,7 +115,7 @@ Elegí el template según el caso (ver la tabla en Arquitectura). Con `template.
 
 ```bash
 sam build -t template.full.yaml
-sam deploy -t template.full.yaml --stack-name techmoda-ai --region us-east-1 \
+sam deploy -t template.full.yaml --stack-name techmoda-ai-aby --region us-east-1 \
   --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND --resolve-s3 --no-confirm-changeset
 ```
 
@@ -140,7 +140,7 @@ los 4 productos (`ai/seed/seed-products.sh`) e imprime las Function URLs. Si el 
 
 ```bash
 bash scripts/status.sh
-API=$(aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 \
+API=$(aws cloudformation describe-stacks --stack-name techmoda-ai-aby --region us-east-1 \
        --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text)
 curl -s "${API%/}/products" | python3 -m json.tool    # debe listar los 4 productos
 ```

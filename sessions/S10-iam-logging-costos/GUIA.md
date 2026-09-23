@@ -83,7 +83,7 @@ A lo largo del proyecto aplicamos un patrón consistente. Repasalo, porque **es 
    aws bedrock get-model-invocation-logging-configuration --region us-east-1
    ```
 4. **Ver costos atribuidos:** activá los cost allocation tags en Billing → Cost Allocation Tags y revisá
-   Cost Explorer filtrando por `Project=techmoda-ai-capstone`.
+   Cost Explorer filtrando por `Project=techmoda-ai-aby-capstone`.
 
 ---
 
@@ -93,7 +93,7 @@ A lo largo del proyecto aplicamos un patrón consistente. Repasalo, porque **es 
 - [ ] Las funciones tienen los tags `Project`/`Module`.
 - [ ] `get-model-invocation-logging-configuration` muestra el logging habilitado.
 - [ ] Existe una alarma de billing (o un AWS Budget) con umbral.
-- [ ] Verificaste el rol que SAM le generó a una función: `aws lambda get-function-configuration --function-name techmoda-ai-EnrichLabels --query Role --output text` y después `aws iam list-role-policies --role-name <ese-rol>`.
+- [ ] Verificaste el rol que SAM le generó a una función: `aws lambda get-function-configuration --function-name techmoda-ai-aby-EnrichLabels --query Role --output text` y después `aws iam list-role-policies --role-name <ese-rol>`.
 
 ---
 

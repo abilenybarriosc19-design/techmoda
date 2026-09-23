@@ -424,7 +424,7 @@ Key: {
 - Usa AWS CLI para verificar eliminación:
 ```bash
 aws dynamodb get-item \
-  --table-name techmoda-ai-Products \
+  --table-name techmoda-ai-aby-Products \
   --key '{"productId": {"S": "the-uuid"}}'
 ```
 
@@ -446,7 +446,7 @@ Tu función DeleteItem está correctamente implementada cuando:
 **Verificar en DynamoDB**:
 ```bash
 aws dynamodb scan \
-  --table-name techmoda-ai-Products \
+  --table-name techmoda-ai-aby-Products \
   --filter-expression "productId = :id" \
   --expression-attribute-values '{":id": {"S": "the-uuid"}}'
 ```

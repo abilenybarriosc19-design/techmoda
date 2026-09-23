@@ -60,7 +60,7 @@ es lo que evalúa el dominio D5 del examen, y lo vas a ver sesión por sesión.
 
 ### 1. Clonar y configurar
 ```bash
-git clone <este-repo> techmoda-ai-capstone && cd techmoda-ai-capstone
+git clone <este-repo> techmoda-ai-aby-capstone && cd techmoda-ai-aby-capstone
 cp samconfig.us-east-1.example samconfig.toml
 ```
 
@@ -73,7 +73,7 @@ SAM empaqueta el router CRUD (Node.js) y valida el `template.yaml`.
 ### 3. Desplegar
 ```bash
 # atajo: bash scripts/deploy.sh
-sam deploy --stack-name techmoda-ai --region us-east-1 \
+sam deploy --stack-name techmoda-ai-aby --region us-east-1 \
   --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
   --resolve-s3 --no-confirm-changeset
 ```
@@ -114,11 +114,11 @@ Abrí `FrontendUrl` en el navegador → deberías ver el catálogo con los 4 pro
 - [ ] `curl "${ApiUrl%/}/products"` devuelve un JSON con `products: [...]`.
 - [ ] La `FrontendUrl` carga y muestra los productos.
 - [ ] Podés crear un producto desde la UI y aparece al refrescar.
-- [ ] En CloudWatch Logs ves el log group `/aws/lambda/techmoda-ai-Router`.
+- [ ] En CloudWatch Logs ves el log group `/aws/lambda/techmoda-ai-aby-Router`.
 
 ```bash
 # Prueba rápida desde la terminal del IDE (ApiUrl es la Function URL del router):
-ApiUrl=$(aws cloudformation describe-stacks --stack-name techmoda-ai \
+ApiUrl=$(aws cloudformation describe-stacks --stack-name techmoda-ai-aby \
           --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text)
 curl -s "${ApiUrl%/}/products" | python3 -m json.tool
 ```

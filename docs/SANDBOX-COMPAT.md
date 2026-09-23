@@ -126,9 +126,9 @@ y CloudFormation revierte el stack (`ROLLBACK_COMPLETE`). No es un error del tem
 **Capabilities del deploy** — ninguna es opcional:
 
 ```bash
-cp samconfig.us-east-1.example samconfig.toml      # stack techmoda-ai, us-east-1
+cp samconfig.us-east-1.example samconfig.toml      # stack techmoda-ai-aby, us-east-1
 sam build
-sam deploy --stack-name techmoda-ai --region us-east-1 \
+sam deploy --stack-name techmoda-ai-aby --region us-east-1 \
   --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
   --resolve-s3 --no-confirm-changeset
 ```
@@ -142,7 +142,7 @@ sam deploy --stack-name techmoda-ai --region us-east-1 \
 bash scripts/validate-all.sh          # estático + CRUD E2E + las 9 features de IA
 
 # O a mano, sólo la base:
-API=$(aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 \
+API=$(aws cloudformation describe-stacks --stack-name techmoda-ai-aby --region us-east-1 \
        --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text)
 curl "${API%/}/products"                       # -> {"products":[...]}
 curl -X POST "${API%/}/products" -H 'Content-Type: application/json' \
@@ -152,7 +152,7 @@ curl -X POST "${API%/}/products" -H 'Content-Type: application/json' \
 Para ver el rol que SAM le generó a una función (útil como ejercicio de D5):
 
 ```bash
-aws lambda get-function-configuration --function-name techmoda-ai-EnrichLabels \
+aws lambda get-function-configuration --function-name techmoda-ai-aby-EnrichLabels \
   --query Role --output text
 ```
 

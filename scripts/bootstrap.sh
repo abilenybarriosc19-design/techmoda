@@ -11,10 +11,10 @@
 # Uso (paso 0 de cada día / después de un cleanup):
 #   bash scripts/bootstrap.sh
 #
-# Variables opcionales: STACK_NAME (default techmoda-ai), AWS_REGION (default us-east-1)
+# Variables opcionales: STACK_NAME (default techmoda-ai-aby), AWS_REGION (default us-east-1)
 # ============================================================================
 set -euo pipefail
-STACK="${STACK_NAME:-techmoda-ai}"
+STACK="${STACK_NAME:-techmoda-ai-aby}"
 REGION="${AWS_REGION:-us-east-1}"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$DIR"

@@ -41,7 +41,7 @@ sesiones devuelven `AccessDeniedException`, ese es el primer sospechoso — no l
 ```bash
 # 1. Desplegar base + las 8 features de IA + gobernanza
 sam build -t template.full.yaml
-sam deploy -t template.full.yaml --stack-name techmoda-ai --region us-east-1 \
+sam deploy -t template.full.yaml --stack-name techmoda-ai-aby --region us-east-1 \
   --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND --resolve-s3 --no-confirm-changeset
 # 2. Sembrar productos
 bash ai/seed/seed-products.sh
@@ -53,7 +53,7 @@ bash sessions/S11-integracion-demo-cleanup/demo.sh
 
 `CAPABILITY_IAM` **no es opcional**: el stack crea un rol por función.
 
-Para S01/S02 (visión) hay que subir una imagen real a `s3://techmoda-ai-frontend/assets/`
+Para S01/S02 (visión) hay que subir una imagen real a `s3://techmoda-ai-aby-frontend/assets/`
 y apuntar el `imageUrl` del producto a esa ruta (`s3://...`).
 
 La ruta progresiva (una sesión por vez, pegando cada `template-snippet.yaml` en

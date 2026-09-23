@@ -214,13 +214,13 @@ flags explícitos:
 
 # O directamente con SAM CLI
 sam build && sam deploy \
-  --stack-name techmoda-ai --region us-east-1 \
+  --stack-name techmoda-ai-aby --region us-east-1 \
   --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
   --resolve-s3 --no-confirm-changeset
 ```
 
 **Notas**:
-- **Stack Name**: `techmoda-ai` (definido también en `samconfig.us-east-1.example`).
+- **Stack Name**: `techmoda-ai-aby` (definido también en `samconfig.us-east-1.example`).
 - **AWS Region**: `us-east-1` (Norte de Virginia; ahí están habilitados Bedrock/Rekognition/etc).
 - **Capabilities**: `CAPABILITY_AUTO_EXPAND` por el Transform de SAM, y `CAPABILITY_IAM` porque el
   stack **crea un rol de mínimo privilegio por función**. Necesitás `iam:CreateRole` en la cuenta.
@@ -398,7 +398,7 @@ Consulta [frontend/README.md](frontend/README.md) para más detalles.
 ./scripts/delete.sh
 
 # Opción 3: Directamente con SAM CLI
-sam delete --stack-name techmoda-ai --region us-east-1
+sam delete --stack-name techmoda-ai-aby --region us-east-1
 ```
 
 **Nota**: Esto eliminará las Function URLs, funciones Lambda, tabla DynamoDB, bucket S3, distribución CloudFront y los roles IAM de ejecución que creó el stack.

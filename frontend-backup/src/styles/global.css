@@ -1,0 +1,139 @@
+/* ============================================================================
+   Global Styles - TechModa Editorial
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', sans-serif;
+  background-color: #faf9f7;
+  color: #2a2824;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2.5rem;
+  letter-spacing: -0.5px;
+}
+
+h2 {
+  font-size: 2rem;
+  letter-spacing: -0.3px;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  h1 {
+    font-size: 1.875rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  h3 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Buttons */
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Inputs */
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+input::placeholder {
+  color: #8b8680;
+  opacity: 1;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid #6b5b95;
+  outline-offset: 2px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #faf9f7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d0cbc4;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b5afa8;
+}
+
+/* Selection */
+::selection {
+  background-color: #6b5b95;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #6b5b95;
+  color: #ffffff;
+}
+
+/* Utilities */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

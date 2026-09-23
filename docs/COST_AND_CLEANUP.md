@@ -168,7 +168,7 @@ Las estimaciones anteriores asumen:
 Ejecuta la limpieza tan pronto hayas demostrado tu API funcionando:
 
 ```bash
-sam delete --stack-name techmoda-ai --region us-east-1
+sam delete --stack-name techmoda-ai-aby --region us-east-1
 ```
 
 Esto previene cualquier cargo continuo, aunque serían mínimos.
@@ -221,13 +221,13 @@ Aunque este proyecto cuesta casi $0 durante el uso activo, los recursos de AWS p
 La forma más rápida y segura de eliminar todos los recursos:
 
 ```bash
-sam delete --stack-name techmoda-ai --region us-east-1
+sam delete --stack-name techmoda-ai-aby --region us-east-1
 ```
 
 **Prompts interactivos**:
 ```
-Are you sure you want to delete the stack techmoda-ai in the region us-east-1 ? [y/N]: y
-Are you sure you want to delete the folder techmoda-ai in S3 which contains the artifacts? [y/N]: y
+Are you sure you want to delete the stack techmoda-ai-aby in the region us-east-1 ? [y/N]: y
+Are you sure you want to delete the folder techmoda-ai-aby in S3 which contains the artifacts? [y/N]: y
 ```
 
 **Qué se elimina**:
@@ -256,7 +256,7 @@ Este script ejecuta el mismo comando `sam delete` con prompts de confirmación.
 Si `sam delete` falla, elimina manualmente vía consola CloudFormation:
 
 1. Ve a la consola de AWS CloudFormation
-2. Selecciona tu stack (ej., `techmoda-ai`)
+2. Selecciona tu stack (ej., `techmoda-ai-aby`)
 3. Haz clic en el botón "Delete"
 4. Confirma la eliminación
 5. Espera a que el estado muestre `DELETE_COMPLETE`
@@ -270,19 +270,19 @@ Después de ejecutar `sam delete`, verifica que todos los recursos se hayan elim
 ### 1. Verificar CloudFormation
 
 ```bash
-aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1
+aws cloudformation describe-stacks --stack-name techmoda-ai-aby --region us-east-1
 ```
 
 **Salida esperada**: Mensaje de error indicando que el stack no existe:
 ```
 An error occurred (ValidationError) when calling the DescribeStacks operation:
-Stack with id techmoda-ai does not exist
+Stack with id techmoda-ai-aby does not exist
 ```
 
 ### 2. Verificar Funciones Lambda Eliminadas
 
 ```bash
-aws lambda list-functions --query "Functions[?contains(FunctionName, 'techmoda-ai')]"
+aws lambda list-functions --query "Functions[?contains(FunctionName, 'techmoda-ai-aby')]"
 ```
 
 **Salida esperada**: Array vacío `[]` (las Function URLs se eliminan con sus funciones).
@@ -290,7 +290,7 @@ aws lambda list-functions --query "Functions[?contains(FunctionName, 'techmoda-a
 ### 3. Verificar Tabla DynamoDB Eliminada
 
 ```bash
-aws dynamodb list-tables --query "TableNames[?contains(@, 'techmoda-ai')]"
+aws dynamodb list-tables --query "TableNames[?contains(@, 'techmoda-ai-aby')]"
 ```
 
 **Salida esperada**: Array vacío `[]`
@@ -298,9 +298,9 @@ aws dynamodb list-tables --query "TableNames[?contains(@, 'techmoda-ai')]"
 ### 4. Verificar que no quedan Function URLs
 
 ```bash
-# Las Function URLs viven sobre las funciones Lambda: si no hay funciones techmoda-ai,
+# Las Function URLs viven sobre las funciones Lambda: si no hay funciones techmoda-ai-aby,
 # tampoco quedan Function URLs. (No hay API Gateway que verificar en el sandbox.)
-aws lambda list-functions --query "Functions[?contains(FunctionName, 'techmoda-ai')].FunctionName"
+aws lambda list-functions --query "Functions[?contains(FunctionName, 'techmoda-ai-aby')].FunctionName"
 ```
 
 **Salida esperada**: Array vacío `[]`
@@ -330,7 +330,7 @@ aws lambda list-functions --query "Functions[?contains(FunctionName, 'techmoda-a
 2. Elimina manualmente el recurso problemático en la Consola de AWS
 3. Reintenta la eliminación:
    ```bash
-   sam delete --stack-name techmoda-ai --region us-east-1 --no-prompts
+   sam delete --stack-name techmoda-ai-aby --region us-east-1 --no-prompts
    ```
 
 ### Problema: "Stack cannot be deleted while in status DELETE_FAILED"
@@ -339,7 +339,7 @@ aws lambda list-functions --query "Functions[?contains(FunctionName, 'techmoda-a
 
 ```bash
 aws cloudformation delete-stack \
-  --stack-name techmoda-ai --region us-east-1 \
+  --stack-name techmoda-ai-aby --region us-east-1 \
   --retain-resources [ResourceLogicalId]
 ```
 
@@ -354,7 +354,7 @@ Reemplaza `[ResourceLogicalId]` con el recurso que falló al eliminarse (de la p
 ```bash
 # Encontrar el nombre del bucket
 aws cloudformation describe-stacks \
-  --stack-name techmoda-ai --region us-east-1 \
+  --stack-name techmoda-ai-aby --region us-east-1 \
   --query "Stacks[0].Parameters[?ParameterKey=='SAMDeploymentBucket'].ParameterValue" \
   --output text
 
@@ -362,7 +362,7 @@ aws cloudformation describe-stacks \
 aws s3 rm s3://YOUR_BUCKET_NAME --recursive
 
 # Reintentar eliminación
-sam delete --stack-name techmoda-ai --region us-east-1
+sam delete --stack-name techmoda-ai-aby --region us-east-1
 ```
 
 ### Problema: Error de permisos durante la eliminación
@@ -381,7 +381,7 @@ Después de eliminar exitosamente tu stack:
 ✅ Verificar que el stack CloudFormation se haya eliminado
 ✅ Confirmar que no quedan funciones Lambda
 ✅ Revisar que la lista de tablas DynamoDB esté vacía
-✅ Verificar que no quedan funciones Lambda con Function URLs (techmoda-ai)
+✅ Verificar que no quedan funciones Lambda con Function URLs (techmoda-ai-aby)
 ✅ Revisar el Panel de Facturación (debe mostrar $0.00 en nuevos cargos)
 ✅ Guardar URL del repositorio GitHub para la entrega
 ✅ Conservar capturas de pantalla del API funcionando (si es requerido)

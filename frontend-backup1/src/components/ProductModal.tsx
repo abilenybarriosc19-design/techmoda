@@ -1,0 +1,184 @@
+import { X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import type { Product } from '../lib/types';
+
+interface ProductModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (product: Omit<Product, 'productId' | 'createdAt' | 'updatedAt'>) => void;
+  product?: Product;
+}
+
+export function ProductModal({ isOpen, onClose, onSave, product }: ProductModalProps) {
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    price: '',
+    category: 'Ropa',
+    stock: '',
+    imageUrl: '',
+  });
+
+  useEffect(() => {
+    if (product) {
+      setFormData({
+        name: product.name,
+        description: product.description,
+        price: product.price.toString(),
+        category: product.category,
+        stock: product.stock.toString(),
+        imageUrl: product.imageUrl,
+      });
+    } else {
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        category: 'Ropa',
+        stock: '',
+        imageUrl: '',
+      });
+    }
+  }, [product, isOpen]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave({
+      name: formData.name,
+      description: formData.description,
+      price: parseFloat(formData.price),
+      category: formData.category,
+      stock: parseInt(formData.stock),
+      imageUrl: formData.imageUrl,
+    });
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-6 border-b">
+          <h2 className="text-2xl font-bold text-gray-900">
+            {product ? 'Editar Producto' : 'Nuevo Producto'}
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div>
+            <label htmlFor="product-name" className="block text-sm font-medium text-gray-700 mb-1">
+              Nombre del Producto
+            </label>
+            <input
+              type="text"
+              required
+              id="product-name"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ej: Camiseta Clásica"
+            />
+          </div>
+          <div>
+            <label htmlFor="product-desc" className="block text-sm font-medium text-gray-700 mb-1">
+              Descripción
+            </label>
+            <textarea
+              required
+              id="product-desc"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              rows={3}
+              placeholder="Describe el producto..."
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="product-price" className="block text-sm font-medium text-gray-700 mb-1">
+                Precio ($)
+              </label>
+              <input
+                type="number"
+                required
+                step="0.01"
+                id="product-price"
+                min="0"
+                value={formData.price}
+                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="29.99"
+              />
+            </div>
+            <div>
+              <label htmlFor="product-stock" className="block text-sm font-medium text-gray-700 mb-1">
+                Stock
+              </label>
+              <input
+                type="number"
+                required
+                min="0"
+                id="product-stock"
+                value={formData.stock}
+                onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="50"
+              />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="product-category" className="block text-sm font-medium text-gray-700 mb-1">
+              Categoría
+            </label>
+            <select
+              required
+              id="product-category"
+              value={formData.category}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="Ropa">Ropa</option>
+              <option value="Zapatos">Zapatos</option>
+              <option value="Accesorios">Accesorios</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="product-image" className="block text-sm font-medium text-gray-700 mb-1">
+              URL de Imagen
+            </label>
+            <input
+              type="url"
+              required
+              id="product-image"
+              value={formData.imageUrl}
+              onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="https://ejemplo.com/imagen.jpg"
+            />
+          </div>
+          <div className="flex gap-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="flex-1 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            >
+              {product ? 'Actualizar' : 'Crear'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}

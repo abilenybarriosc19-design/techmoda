@@ -236,7 +236,7 @@ curl -X GET "${API_URL%/}/products/nonexistent-id-12345"
 ### Verificar en CloudWatch Logs
 
 ```bash
-aws logs tail /aws/lambda/techmoda-ai-GetItem --follow
+aws logs tail /aws/lambda/techmoda-ai-aby-GetItem --follow
 ```
 
 ## Prompt para Claude Code

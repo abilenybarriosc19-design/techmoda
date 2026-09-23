@@ -18,7 +18,7 @@ migración **elimina la inconsistencia** que introdujo la versión IA en lugar d
 
 **Éxito** (medible):
 1. `grep -rI 'us-west-2'` sobre el repo (excluyendo `.git`, `.aws-sam`, `node_modules`) → **0 resultados**
-2. `bash scripts/bootstrap.sh` deja el stack `techmoda-ai` en `us-east-1` y `curl "${API%/}/products"`
+2. `bash scripts/bootstrap.sh` deja el stack `techmoda-ai-aby` en `us-east-1` y `curl "${API%/}/products"`
    devuelve los 4 productos sembrados
 3. `sam validate --lint` pasa en los 3 templates; `npm run lint && npm run typecheck && npx vitest run`
    pasa en `frontend/` (88 casos)
@@ -133,7 +133,7 @@ no altera eso. La estructura de dos pistas sobrevive intacta.
 10. **Verificación E2E de Pista A** (0.75 h) · Deps: T9 · Riesgo: Medio
     `scripts/status.sh`; `curl "${API%/}/products"` → 4 productos; smoke de S01/S02/S03/S05 con los
     `curl` de cada `GUIA.md`. Requiere subir una imagen real a
-    `s3://techmoda-ai-frontend/assets/` para las de visión.
+    `s3://techmoda-ai-aby-frontend/assets/` para las de visión.
 11. **Frontend y CloudFront** (0.5 h) · Deps: T9 · Riesgo: Bajo
     `bash scripts/deploy-frontend.sh` (re-inyecta `env-config.js` con la Function URL nueva de
     `us-east-1`). CloudFront tarda 15–20 min en propagar la distribución nueva.
@@ -208,7 +208,7 @@ eso solo lo prueba T11 en el navegador. Ese defecto es **preexistente y ortogona
 | # | Decisión | Estado |
 |---|---|---|
 | Entorno destino | Sandbox re/Start, misma cuenta `879652687082`, región `us-east-1`. `LabRoleArn` sin cambios | ✅ Confirmado |
-| Stack en `us-west-2` | Borrarlo antes de migrar (`delete-all.sh`), reusando `stack_name` `techmoda-ai` | ✅ Confirmado |
+| Stack en `us-west-2` | Borrarlo antes de migrar (`delete-all.sh`), reusando `stack_name` `techmoda-ai-aby` | ✅ Confirmado |
 | Alarma de billing | **Fuera de alcance.** Solo se corrige la nota, no se agrega el recurso | ✅ Confirmado |
 | Orden con gate T1 | Validar `us-east-1` antes de editar cualquier archivo | ✅ Sin objeciones |
 

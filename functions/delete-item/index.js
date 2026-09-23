@@ -26,7 +26,6 @@ exports.handler = async (event) => {
                 statusCode: 400,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
                 },
                 body: JSON.stringify({
                     error: 'ID del producto requerido'
@@ -50,7 +49,6 @@ exports.handler = async (event) => {
             statusCode: 200,
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify({
                 message: 'Producto eliminado exitosamente',
@@ -64,7 +62,6 @@ exports.handler = async (event) => {
             statusCode: 500,
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify({
                 error: 'Error al eliminar producto',

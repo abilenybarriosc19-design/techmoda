@@ -5,7 +5,7 @@ Esta guía te ayudará a desplegar y probar el proyecto en 10 minutos.
 > 🔌 **Cómo está armado:** sin API Gateway — la API es una **Lambda Function URL** servida por un
 > router. Cada Lambda declara sus `Policies:` y **SAM le crea un rol de mínimo privilegio**, así que
 > necesitás una cuenta donde puedas **crear roles IAM** (`iam:CreateRole`). Región `us-east-1`, stack
-> `techmoda-ai`. Detalle: [`docs/SANDBOX-COMPAT.md`](docs/SANDBOX-COMPAT.md) (por qué no hay API
+> `techmoda-ai-aby`. Detalle: [`docs/SANDBOX-COMPAT.md`](docs/SANDBOX-COMPAT.md) (por qué no hay API
 > Gateway) y [`docs/IAM.md`](docs/IAM.md) (permisos).
 
 > ✅ **Antes de tocar AWS**, un comando te dice si todo está en orden:
@@ -28,7 +28,7 @@ Las funciones Lambda ya están implementadas y listas para usar. Solo necesitas 
 ```
 
 `scripts/deploy.sh` corre `sam build && sam deploy` con las capabilities correctas
-(`CAPABILITY_IAM CAPABILITY_AUTO_EXPAND`, región `us-east-1`, stack `techmoda-ai`, sin API Gateway).
+(`CAPABILITY_IAM CAPABILITY_AUTO_EXPAND`, región `us-east-1`, stack `techmoda-ai-aby`, sin API Gateway).
 `CAPABILITY_IAM` **no es opcional**: el stack crea un rol de ejecución por Lambda.
 
 ### Paso 3: Obtener tu API URL
@@ -45,7 +45,7 @@ ApiUrl    https://xxxxxxxxxxxxxxxxxxxxxxxxx.lambda-url.us-east-1.on.aws/
 
 ```bash
 # Configura tu API URL (la Function URL del router). %/ quita el slash final.
-export API_URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai \
+export API_URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai-aby \
   --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text)
 API_URL="${API_URL%/}"
 

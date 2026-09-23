@@ -1,6 +1,6 @@
 {
   "_comment": "Scaffold de configuración de un Amazon Bedrock Guardrail para TechModa. Se crea con scripts/create-guardrail.sh (aws bedrock create-guardrail). El ID resultante se inyecta como BEDROCK_GUARDRAIL_ID en las Lambdas S6/S8.",
-  "name": "techmoda-ai-guardrail",
+  "name": "techmoda-ai-aby-guardrail",
   "description": "Guardrail para las features de IA de TechModa: bloquea temas fuera de dominio, filtra PII y contenido dañino.",
   "blockedInputMessaging": "Lo siento, solo puedo ayudarte con productos y compras de TechModa.",
   "blockedOutputsMessaging": "No puedo responder eso. ¿Te ayudo a encontrar un producto?",

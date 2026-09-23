@@ -145,7 +145,7 @@ completa de qué política lleva cada función está en [`IAM.md`](IAM.md).
 **Propósito**: Almacén de datos NoSQL persistente para el catálogo de productos.
 
 **Configuración de Tabla**:
-- **Nombre de Tabla**: `{StackName}-Products` (ej., `techmoda-ai-Products`)
+- **Nombre de Tabla**: `{StackName}-Products` (ej., `techmoda-ai-aby-Products`)
 - **Clave Primaria**: `productId` (String) - Solo clave de partición
 - **Modo de Facturación**: PAY_PER_REQUEST (bajo demanda)
 - **Protección de Eliminación**: Deshabilitada (para limpieza fácil)

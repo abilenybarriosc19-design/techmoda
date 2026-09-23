@@ -280,7 +280,7 @@ curl -X POST "${API_URL%/}/products" \
 
 ```bash
 aws dynamodb scan \
-  --table-name techmoda-ai-Products \
+  --table-name techmoda-ai-aby-Products \
   --query "Items[*].[productId.S, name.S, price.N]"
 ```
 

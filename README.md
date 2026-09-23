@@ -140,14 +140,14 @@ el **2026-06-17**:
 
 ```bash
 # 1. Clonar el repo dentro del VS Code IDE del sandbox
-git clone <este-repo> techmoda-ai-capstone && cd techmoda-ai-capstone
+git clone <este-repo> techmoda-ai-aby-capstone && cd techmoda-ai-aby-capstone
 
 # 2. Configurar SAM para us-east-1
 cp samconfig.us-east-1.example samconfig.toml
 
 # 3. Construir y desplegar (atajo: bash scripts/deploy.sh)
 sam build
-sam deploy --stack-name techmoda-ai --region us-east-1 \
+sam deploy --stack-name techmoda-ai-aby --region us-east-1 \
   --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
   --resolve-s3 --no-confirm-changeset
 
@@ -165,7 +165,7 @@ Detalle completo y validación en **[sessions/S00-base/GUIA.md](sessions/S00-bas
 > 🧩 **Dos formas de llegar al mismo resultado:**
 > - **Progresiva (recomendada, pedagógica):** desplegás `template.yaml` (solo S0) y vas pegando el
 >   `template-snippet.yaml` de cada sesión, una por hora. Así "ves crecer" la arquitectura.
-> - **Todo junto:** `sam build -t template.full.yaml && sam deploy -t template.full.yaml --stack-name techmoda-ai
+> - **Todo junto:** `sam build -t template.full.yaml && sam deploy -t template.full.yaml --stack-name techmoda-ai-aby
 >   --region us-east-1 --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND --resolve-s3 --no-confirm-changeset`
 >   despliega la base + las 8 features de IA (S1–S8) + gobernanza (S10) ya cableadas, cada una con su
 >   Function URL. Útil para una demo rápida o para revisar el resultado final.
@@ -199,7 +199,7 @@ Detalles: **[docs/COST_AND_CLEANUP.md](docs/COST_AND_CLEANUP.md)** y **[sessions
 ## 🧭 Cómo navegar este repo
 
 ```
-techmoda-ai-capstone/
+techmoda-ai-aby-capstone/
 ├── README.md                  # este archivo
 ├── README-BASE-SERVERLESS.md  # docs del capstone serverless base (sin IA)
 ├── template.yaml              # SAM base (S0). Cada sesión agrega su snippet aquí.

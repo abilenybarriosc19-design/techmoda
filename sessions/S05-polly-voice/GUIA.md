@@ -54,7 +54,7 @@ de ciclo de vida que **borra el audio a los 7 días** (FinOps).
 2. `sam build && sam deploy`.
 3. Generá audio en español (Function URL de esta función; el productId va en path o body):
 ```bash
-URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 \
+URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai-aby --region us-east-1 \
   --query "Stacks[0].Outputs[?OutputKey=='SynthesizeVoiceUrl'].OutputValue" --output text)
 curl -s -X POST "${URL%/}/products/PRODUCT_ID/voice" \
   -H "Content-Type: application/json" -d '{"lang":"es"}' | python3 -m json.tool
@@ -65,7 +65,7 @@ Respuesta:
   "productId": "a1b2...",
   "lang": "es",
   "voice": "Lupe",
-  "audioUrl": "https://techmoda-ai-audio.s3.amazonaws.com/audio/a1b2-es.mp3?X-Amz-...",
+  "audioUrl": "https://techmoda-ai-aby-audio.s3.amazonaws.com/audio/a1b2-es.mp3?X-Amz-...",
   "expiresIn": 3600
 }
 ```
@@ -83,7 +83,7 @@ la tabla. El bucket bloquea todo acceso público; el acceso es por URL firmada t
 ## ✅ Checklist de validación
 
 - [ ] El `audioUrl` reproduce la descripción con voz natural.
-- [ ] El bucket `techmoda-ai-audio` existe y **no** es público.
+- [ ] El bucket `techmoda-ai-aby-audio` existe y **no** es público.
 - [ ] El objeto `audio/PRODUCT_ID-es.mp3` está en el bucket.
 - [ ] (Si hiciste S4) `{"lang":"en"}` usa la traducción y la voz Joanna.
 
@@ -106,7 +106,7 @@ con **capa gratuita** los primeros meses (verificar vigencia). Generar audios de
 
 **Cleanup de S5:**
 ```bash
-aws s3 rm s3://techmoda-ai-audio --recursive   # vaciar antes de borrar
+aws s3 rm s3://techmoda-ai-aby-audio --recursive   # vaciar antes de borrar
 ```
 Luego quitar `AudioBucket` + `SynthesizeVoiceFunction` + ruta del `template.yaml` y `sam deploy`.
 La regla de ciclo de vida ya expira el audio a los 7 días aunque te olvides.

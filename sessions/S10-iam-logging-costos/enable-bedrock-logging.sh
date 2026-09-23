@@ -11,8 +11,8 @@ set -euo pipefail
 
 REGION="${AWS_REGION:-us-east-1}"
 ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
-LOG_GROUP="${LOG_GROUP:-/techmoda/techmoda-ai/bedrock-invocations}"
-ROLE_NAME="${ROLE_NAME:-techmoda-ai-BedrockLogsDelivery}"
+LOG_GROUP="${LOG_GROUP:-/techmoda/techmoda-ai-aby/bedrock-invocations}"
+ROLE_NAME="${ROLE_NAME:-techmoda-ai-aby-BedrockLogsDelivery}"
 ROLE_ARN="${ROLE_ARN:-}"
 
 if [ -z "$ROLE_ARN" ]; then

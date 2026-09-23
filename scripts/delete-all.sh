@@ -12,9 +12,9 @@ echo "=========================================="
 echo ""
 
 # Get stack name from samconfig.toml or use default
-STACK_NAME="techmoda-ai"
+STACK_NAME="techmoda-ai-aby-aby"
 if [ -f "samconfig.toml" ]; then
-    STACK_NAME=$(grep 'stack_name' samconfig.toml | cut -d'"' -f2 || echo "techmoda-ai")
+    STACK_NAME=$(grep 'stack_name' samconfig.toml | cut -d'"' -f2 || echo "techmoda-ai-aby")
 fi
 
 # Check if stack exists

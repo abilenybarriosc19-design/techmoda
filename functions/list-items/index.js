@@ -31,7 +31,6 @@ exports.handler = async (event) => {
             statusCode: 200,
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify({
                 products: result.Items || []
@@ -44,7 +43,6 @@ exports.handler = async (event) => {
             statusCode: 500,
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify({
                 error: 'Error al listar productos',

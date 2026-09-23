@@ -6,11 +6,11 @@ Estos prompts le guían a través de la construcción y el despliegue de su apli
 > URL** (router CRUD) y **SAM le crea a cada Lambda un rol de mínimo privilegio** a partir de sus
 > `Policies:` (por eso `CAPABILITY_IAM` es obligatoria). Por eso:
 > - El comando real de deploy es:
->   `sam deploy --stack-name techmoda-ai --region us-east-1 --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND --resolve-s3 --no-confirm-changeset`
+>   `sam deploy --stack-name techmoda-ai-aby --region us-east-1 --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND --resolve-s3 --no-confirm-changeset`
 >   (atajo: `bash scripts/deploy.sh`). **No** uses `--guided` interactivo.
 > - El output `ApiUrl` es una Function URL `https://<id>.lambda-url.us-east-1.on.aws/` (sin `/Prod`).
 > - Donde abajo veas "API Gateway", "TechModaApi", "execute-api", "/Prod" o
->   "techmoda-capstone", interpretá Function URL / `ApiUrl` / `techmoda-ai`.
+>   "techmoda-capstone", interpretá Function URL / `ApiUrl` / `techmoda-ai-aby`.
 >
 > Las 3 restricciones y el patrón están en [`../SANDBOX-COMPAT.md`](../SANDBOX-COMPAT.md).
 
@@ -265,7 +265,7 @@ Please help me:
 
 ```bash
 aws cloudformation describe-stacks \
-  --stack-name techmoda-ai \
+  --stack-name techmoda-ai-aby \
   --query "Stacks[0].StackStatus" \
   --output text
 ```
@@ -276,7 +276,7 @@ aws cloudformation describe-stacks \
 
 ```bash
 aws cloudformation list-stack-resources \
-  --stack-name techmoda-ai
+  --stack-name techmoda-ai-aby
 ```
 
 **Debería Ver** (base S0):
@@ -291,7 +291,7 @@ aws cloudformation list-stack-resources \
 
 ```bash
 aws cloudformation describe-stacks \
-  --stack-name techmoda-ai \
+  --stack-name techmoda-ai-aby \
   --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" \
   --output text
 ```
@@ -299,7 +299,7 @@ aws cloudformation describe-stacks \
 ### Probar Endpoint de API
 
 ```bash
-API_URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai \
+API_URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai-aby \
   --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text)
 curl "${API_URL%/}/products"
 ```

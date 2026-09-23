@@ -3,7 +3,7 @@
 Este directorio contiene scripts para facilitar el despliegue y gestión de la aplicación TechModa.
 
 > 🏖️ **Sandbox AWS re/Start:** el frente HTTP son **Lambda Function URLs** (no API Gateway), el stack
-> se llama **`techmoda-ai`** y la región es **us-east-1**. Las URLs de ejemplo de abajo tienen el
+> se llama **`techmoda-ai-aby`** y la región es **us-east-1**. Las URLs de ejemplo de abajo tienen el
 > formato `https://<id>.lambda-url.us-east-1.on.aws/`. Ver
 > [../docs/SANDBOX-COMPAT.md](../docs/SANDBOX-COMPAT.md).
 
@@ -171,11 +171,11 @@ Cuando pregunte, escribe: `si` (o `SI` o `yes`)
   TechModa - Estado del Despliegue
 ==========================================
 
-🔍 Buscando stack: techmoda-ai
+🔍 Buscando stack: techmoda-ai-aby
 
 📊 Estado del Stack
 -------------------------------------------
-Nombre: techmoda-ai
+Nombre: techmoda-ai-aby
 Estado: CREATE_COMPLETE
 
 📋 Información del Despliegue
@@ -194,7 +194,7 @@ Estado: CREATE_COMPLETE
    https://d123abc.cloudfront.net
 
 🗄️  Base de Datos:
-   Tabla: techmoda-ai-ProductsTable-ABC123
+   Tabla: techmoda-ai-aby-ProductsTable-ABC123
    Productos: 5
 
 ==========================================
@@ -237,19 +237,19 @@ Estado: CREATE_COMPLETE
 ==========================================
 
 🔧 Intentando recuperar del error DELETE_FAILED
-Stack: techmoda-ai
+Stack: techmoda-ai-aby
 
 📊 Estado actual del stack: DELETE_FAILED
 
 🔍 Paso 1: Identificando buckets S3 problemáticos...
 -------------------------------------------
 📦 Buckets encontrados:
-   • techmoda-ai-frontend-abc123
+   • techmoda-ai-aby-frontend-abc123
    • aws-sam-cli-managed-default-samclisourcebucket-xyz789
 
 🗑️  Paso 2: Vaciando buckets S3...
 -------------------------------------------
-🧹 Vaciando: techmoda-ai-frontend-abc123
+🧹 Vaciando: techmoda-ai-aby-frontend-abc123
    Eliminando 5 objetos...
    ✅ Bucket vaciado
 🧹 Vaciando: aws-sam-cli-managed-default-samclisourcebucket-xyz789
@@ -356,7 +356,7 @@ Cambiar rango de tiempo:
 ==========================================
 
 📊 Configuration:
-   Stack:    techmoda-ai
+   Stack:    techmoda-ai-aby
    Function: All functions
    Since:    10m ago
    Mode:     Historical

@@ -6,7 +6,7 @@ Esta guía ayuda a los instructores a facilitar la Sesión 10 (la sesión del ca
 
 > 🔌 **Lo que realmente se despliega:** el CRUD se expone con **una Lambda Function URL** + **router**
 > (no API Gateway), y cada función lleva sus `Policies:` para que **SAM le cree un rol de mínimo
-> privilegio**. Stack **`techmoda-ai`**, región **us-east-1**. Requiere una cuenta con `iam:CreateRole`.
+> privilegio**. Stack **`techmoda-ai-aby`**, región **us-east-1**. Requiere una cuenta con `iam:CreateRole`.
 > Donde esta guía menciona API Gateway, es material didáctico del patrón clásico. Ver
 > [../docs/SANDBOX-COMPAT.md](../docs/SANDBOX-COMPAT.md) y [../docs/IAM.md](../docs/IAM.md).
 
@@ -313,7 +313,7 @@ return {
   - Quedó un `AWS::Serverless::Api` o `Events: Type: Api` (el capstone no usa API Gateway)
   - Template inválido: Errores de sintaxis YAML
 - Reintentar despliegue después de corregir el problema
-- Eliminar stack fallido: `aws cloudformation delete-stack --stack-name techmoda-ai --region us-east-1`
+- Eliminar stack fallido: `aws cloudformation delete-stack --stack-name techmoda-ai-aby --region us-east-1`
 
 ### Desafío 8: Confusión con las Pruebas
 
@@ -547,22 +547,22 @@ Ver [EVALUATION_RUBRIC.md](EVALUATION_RUBRIC.md) para criterios de puntuación d
 
 **Function URL faltante** (output `ApiUrl`):
 ```bash
-aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 --query "Stacks[0].Outputs"
+aws cloudformation describe-stacks --stack-name techmoda-ai-aby --region us-east-1 --query "Stacks[0].Outputs"
 ```
 
 **Revisar items de DynamoDB**:
 ```bash
-aws dynamodb scan --table-name techmoda-ai-Products
+aws dynamodb scan --table-name techmoda-ai-aby-Products
 ```
 
 **Ver logs recientes de Lambda**:
 ```bash
-aws logs tail /aws/lambda/techmoda-ai-ListItems --since 5m
+aws logs tail /aws/lambda/techmoda-ai-aby-ListItems --since 5m
 ```
 
 **Forzar eliminación de stack atascado**:
 ```bash
-aws cloudformation delete-stack --stack-name techmoda-ai --region us-east-1
+aws cloudformation delete-stack --stack-name techmoda-ai-aby --region us-east-1
 ```
 
 ## Seguimiento Post-Sesión

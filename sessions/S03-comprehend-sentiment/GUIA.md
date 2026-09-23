@@ -56,7 +56,7 @@ Flujo de esta sesión (y por qué importa para el examen):
 2. `sam build && sam deploy`.
 3. Obtené la Function URL de esta función y probá un texto suelto:
 ```bash
-URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 \
+URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai-aby --region us-east-1 \
   --query "Stacks[0].Outputs[?OutputKey=='AnalyzeSentimentUrl'].OutputValue" --output text)
 curl -s -X POST "${URL%/}/sentiment" \
   -H "Content-Type: application/json" \

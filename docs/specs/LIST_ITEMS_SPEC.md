@@ -185,7 +185,7 @@ Después de desplegar tu stack SAM, obtén la Function URL del router desde los 
 
 ```bash
 API_URL=$(aws cloudformation describe-stacks \
-  --stack-name techmoda-ai \
+  --stack-name techmoda-ai-aby \
   --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" \
   --output text)
 ```
@@ -218,7 +218,7 @@ curl -X GET "${API_URL%/}/products"
 ### Verificar en CloudWatch Logs
 
 ```bash
-aws logs tail /aws/lambda/techmoda-ai-ListItems --follow
+aws logs tail /aws/lambda/techmoda-ai-aby-ListItems --follow
 ```
 
 Buscar:

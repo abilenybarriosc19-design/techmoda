@@ -49,7 +49,7 @@ Ideas que el examen evalúa:
 2. `sam build && sam deploy`.
 3. Traducí un producto al inglés (Function URL de esta función; el productId va en path o body):
 ```bash
-URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 \
+URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai-aby --region us-east-1 \
   --query "Stacks[0].Outputs[?OutputKey=='TranslateCatalogUrl'].OutputValue" --output text)
 curl -s -X POST "${URL%/}/products/PRODUCT_ID/translate" \
   -H "Content-Type: application/json" -d '{"target":"en"}' | python3 -m json.tool

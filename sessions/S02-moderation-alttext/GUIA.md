@@ -63,7 +63,7 @@ imágenes, y aquí lo automatizamos.
 2. `sam build && sam deploy`.
 3. Ejecutá (usá la Function URL de esta función; el productId va en el path o en el body):
 ```bash
-URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 \
+URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai-aby --region us-east-1 \
   --query "Stacks[0].Outputs[?OutputKey=='ModerateImageUrl'].OutputValue" --output text)
 curl -s -X POST "${URL%/}/products/PRODUCT_ID/moderate" | python3 -m json.tool
 ```

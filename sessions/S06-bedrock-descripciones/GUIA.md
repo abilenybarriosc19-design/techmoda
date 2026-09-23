@@ -66,7 +66,7 @@ entrenar/alojar tus propios modelos**. Para "generar texto sin entrenar nada" �
 3. `sam build && sam deploy`.
 4. Generá una descripción (Function URL de esta función; el productId va en path o body):
 ```bash
-URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai --region us-east-1 \
+URL=$(aws cloudformation describe-stacks --stack-name techmoda-ai-aby --region us-east-1 \
   --query "Stacks[0].Outputs[?OutputKey=='GenerateDescriptionUrl'].OutputValue" --output text)
 curl -s -X POST "${URL%/}/products/PRODUCT_ID/describe" \
   -H "Content-Type: application/json" \
