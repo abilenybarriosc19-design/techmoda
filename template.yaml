@@ -378,7 +378,7 @@ Resources:
       FunctionName:
         Fn::Sub: ${AWS::StackName}-SemanticSearch
       Description: S7 - Busqueda semantica del catalogo (Bedrock Titan)
-      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-lygcp6suvfg2/2aa1c9bd18682c9209b8406e22fdad39
+      CodeUri: sessions/S07-bedrock-rag-busqueda/functions/semantic-search/
       Handler: app.lambda_handler
       Runtime: python3.12
       Policies:

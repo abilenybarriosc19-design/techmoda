@@ -33,3 +33,10 @@ logs/
 __pycache__/
 *.pyc
 .build/
+
+# Local backups
+*.bak
+*.bak-*
+*.tar.gz
+frontend-claude-backup/
+lambda-cors-backup/

@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap');
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #fffdf9;
+  color: #29232a;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+::selection { background: #e8e0ff; }
+*:focus-visible { outline: 2px solid #6d4aff; outline-offset: 2px; }
+
+.display-title, .section-title { font-family: 'Playfair Display', Georgia, serif; letter-spacing: -.04em; }
+.display-title { font-size: clamp(3rem, 6vw, 5.8rem); line-height: .98; font-weight: 500; }
+.display-title em { color: #795487; }
+.section-title { font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.02; font-weight: 500; }
+.eyebrow { align-items: center; color: #795487; display: inline-flex; font-size: .68rem; font-weight: 700; gap: .45rem; letter-spacing: .13em; }
+.hero-shell { background: radial-gradient(circle at 82% 30%, #eadde8 0, transparent 26%), linear-gradient(110deg, #f5f0e8 0%, #fbf8f4 52%, #eee5ee 100%); overflow: hidden; }
+.hero-photo { border-radius: 10rem 10rem 1.5rem 1.5rem; height: 27rem; justify-self: end; max-width: 22rem; overflow: hidden; box-shadow: 0 25px 55px rgba(66, 44, 61, .18); transform: rotate(2.2deg); }
+.hero-photo img { height: 100%; object-fit: cover; width: 100%; }
+
+.store-scrollbar::-webkit-scrollbar { width: 6px; }
+.store-scrollbar::-webkit-scrollbar-thumb { background: #d8d8d8; border-radius: 20px; }
